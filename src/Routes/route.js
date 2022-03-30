@@ -23,6 +23,7 @@ router.delete("/books/:bookId",middleware.authorization,bookController.deleteByI
 
 //review controler
  router.post("/books/:bookId/review",reviewController.addReview)
+ //router.put("/books/:bookId/review/:reviewId", reviewController.updateReviews)
  router.put("/books/:bookId/review/:reviewId",reviewController.updateReviews)
  router.delete("/books/:bookId/review/:reviewId",reviewController.deletedReview)
 
