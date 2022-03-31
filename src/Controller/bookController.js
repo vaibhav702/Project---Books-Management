@@ -313,11 +313,12 @@ const updateBook = async function (req, res) {
     const { title, ISBN, releasedAt , subcategory} = req.body;
 
     if (title) {
+
       const isTitleExists = await bookModel.find({
         title: { $regex: title, $options: "i" },
         isDeleted: false,
       });
-      
+     
       console.log(isTitleExists);
       const exactTitleMatch = [];
       for (let i = 0; i < isTitleExists.length; i++) {
