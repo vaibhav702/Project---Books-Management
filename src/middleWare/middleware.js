@@ -26,6 +26,7 @@ const authentication = async function (req, res, next) {
 
 //authorization and authentication
 const authorization = async function (req, res, next) {
+  try{
   let token = req.headers["x-auth-token"];
 
   if (!token) {
@@ -75,6 +76,11 @@ const authorization = async function (req, res, next) {
       next();
     }
   }
+}catch(error){
+
+  return res.status(500).send({status:false, message:error.message})
+
+}
 };
 
 module.exports.authorization = authorization;

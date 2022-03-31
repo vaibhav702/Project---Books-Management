@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
 const validator = require("../validator/validator");
 const jwt = require("jsonwebtoken");
+const validatEmail = require("validator")
 
 const registerUser = async function (req, res) {
   try {
@@ -85,6 +86,18 @@ const registerUser = async function (req, res) {
       //     });
       // }
       
+
+
+//       const emailvalidator = require("email-validator");
+// if(validator.validate(req.body.email)){
+//       // Your call to model here
+// }else{
+//    res.status(400).send('Invalid Email');
+// }
+        if(!validatEmail.isEmail(email)){
+          return res.status(400).send({status:false, msg:"BAD REQUEST email is invalid "})
+
+        }
      
       if (!/^[^A-Z]*$/.test(email)) {
          
@@ -114,7 +127,7 @@ const registerUser = async function (req, res) {
         //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
         //^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$
         //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
-      if (! /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/.test(password)) {
+      if (! /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/.test(password)) {
         return res.status(400).send({
 
             status: false,
@@ -208,14 +221,26 @@ const loginUser = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "enter valid email" });
-    }  //!/^([a-z0-9\.-]+)@([a-z-]+).([a-z]+)$/
-    //!/^([a-z0-9\.-]+)@([a-z-]+).([a-z]+)$/
-    if (!/^([a-z0-9\.-]+)@([a-z-]+).([a-z]+)$/.test(email)) {
-      // john45665@gmail.com
-      return res
-        .status(422)
-        .send({ status: false, message: "please enter valid email" });
+    }  
+
+
+
+    if(!validatEmail.isEmail(email)){
+      return res.status(400).send({status:false, msg:"BAD REQUEST email is invalid "})
+
     }
+ 
+  if (!/^[^A-Z]*$/.test(email)) {
+     
+      return res.status(400).send({status:false, msg:"BAD REQUEST please provied valid email which do not contain any Capital letter "})
+    
+  }
+
+
+
+
+
+
 
     if (!validator.isValid(password)) {
       return res

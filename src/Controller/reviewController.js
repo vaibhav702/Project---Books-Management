@@ -87,6 +87,8 @@ const addReview = async (req, res) => {
 };
 
 
+
+
 const updateReviews = async (req, res) => {
   try {
     if (!validator.isValid(req.params)) {
@@ -108,12 +110,12 @@ const updateReviews = async (req, res) => {
     // if (!bookId) bookId = req.query.bookId;
     // if (!bookId) bookId = req.body.bookId;
 
-    if (!validator.isValid(bookId)) {
-      return res.status(400).send({
-        status: false,
-        msg: "Bad request bookId is must please provide bookId ",
-      });
-    }
+    // if (!validator.isValid(bookId)) {
+    //   return res.status(400).send({
+    //     status: false,
+    //     msg: "Bad request bookId is must please provide bookId ",
+    //   });
+    // }
 
     if (!validator.isValidObjectId(bookId)) {
       return res.status(400).send({ status: false, message: "Invalid bookId" });
@@ -199,6 +201,11 @@ const updateReviews = async (req, res) => {
 
 
 
+
+
+
+
+
 const deletedReview = async function (req, res) {
  
   try {
@@ -224,6 +231,7 @@ const deletedReview = async function (req, res) {
       _id: reviewId,
       isDeleted: false,
     });
+    
 
     if (isReviewIdPresent == null) {
       return res.status(404).send({

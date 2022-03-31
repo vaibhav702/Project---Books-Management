@@ -196,14 +196,15 @@ const getBook = async function (req, res) {
       }
       
 
-      const filter = {
-        ...data
-      }
-       const filterData = await bookModel.find({$and: [{isDeleted:false},{$in:filter}]})
+      
+       const filterData = await bookModel.find(
+         {$and: [{isDeleted:false},
+          {$or:[{userId:userId},{category:category},{subcategory: {$in :subcategory} }] }] })
+          .select({ _id:1, title:1, excerpt: 1, category:1, releasedAt: 1, userId: 1, reviews: 1 });
+          
 
 
-      console.log(subcategory);
-
+      console.log(filterData)
       if (!filterData.length) {
         return res
           .status(404)
@@ -294,8 +295,8 @@ const updateBook = async function (req, res) {
     }
 
     let bookId = req.params.bookId;
-    if (!bookId) bookId = req.query.bookId;
-    if (!bookId) bookId = req.body.bookId;
+    // if (!bookId) bookId = req.query.bookId;
+    // if (!bookId) bookId = req.body.bookId;
 
     if (!bookId) {
       return res.status(400).send({
@@ -310,7 +311,15 @@ const updateBook = async function (req, res) {
         .send({ status: false, message: "Invalid ObjectId" });
     }
 
+    let bookpresent = await bookModel.findOne({_id:bookId, isDeleted:false})
+     if(!bookpresent){
+       return res.status(404).send({status:false, message: "book with this id not found"})
+     }
+     
+
     const { title, ISBN, releasedAt , subcategory} = req.body;
+
+
 
     if (title) {
 
@@ -455,7 +464,7 @@ const deleteById = async function (req, res) {
 
     await reviewModel.updateMany(
       { bookId: bookId },
-      { isDeleted: true },
+      { isDeleted: true ,deletedAt: new Date()},
       { new: true }
     );
 

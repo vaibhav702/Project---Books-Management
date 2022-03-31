@@ -10,11 +10,16 @@ router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser); //to create User
 
 //book controller
-router.post("/books", middleware.authorization, bookController.createBook);
-router.get("/books", middleware.authentication,bookController.getBook);
-router.get("/books/:bookId",middleware.authentication,bookController.getBookById);
-router.put("/books/:bookId",middleware.authorization,bookController.updateBook);
-router.delete("/books/:bookId",middleware.authorization, bookController.deleteById);
+router.post("/books", //middleware.authorization,
+ bookController.createBook);
+router.get("/books",// middleware.authentication,
+bookController.getBook);
+router.get("/books/:bookId",//middleware.authentication,
+bookController.getBookById);
+router.put("/books/:bookId",//middleware.authorization,
+bookController.updateBook);
+router.delete("/books/:bookId",middleware.authorization,
+ bookController.deleteById);
 
 //review controler
 router.post("/books/:bookId/review", reviewController.addReview);
