@@ -12,11 +12,14 @@ const authentication = async function (req, res, next) {
         .send({ status: false, message: "Please pass token" });
     }
 
+
     let decodedToken = jwt.verify(token, secretkey);
+
     if (!decodedToken) {
       return res.status(400).send({ status: false, msg: "token is invalid" });
     }
-
+   // const exp = decodedToken.exp;
+   
     next();
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
@@ -43,6 +46,9 @@ const authorization = async function (req, res, next) {
   console.log(!bookId);
 
   if (!bookId) {
+
+
+
     let userId = req.body.userId;
     console.log(userId, decodedToken.userId, "1");
     if (userId == decodedToken.userId) {
@@ -52,7 +58,12 @@ const authorization = async function (req, res, next) {
         .status(401)
         .send({ status: false, message: "You are not authorized" });
     }
+
+
+
+
   } else {
+
     if(!validator.isValidObjectId(bookId)){
       return res.status(400).send({status:false, message:"Error!: objectId is not valid"})
     }
@@ -60,20 +71,22 @@ const authorization = async function (req, res, next) {
       _id: bookId,
       isDeleted: false,
     });
-    console.log(bookIdPresent)
+    // console.log(bookIdPresent)
     if (!bookIdPresent) {
       return res
         .status(400)
         .send({ status: false, msg: "Book id is not present" });
     }
 
-    console.log(bookIdPresent.userId, decodedToken.userId, "2");
+   // console.log(bookIdPresent.userId, decodedToken.userId, "2");
     if (bookIdPresent.userId != decodedToken.userId) {
       return res
         .status(401)
         .send({ status: false, message: "You are not authorized" });
     } else {
+
       next();
+
     }
   }
 }catch(error){

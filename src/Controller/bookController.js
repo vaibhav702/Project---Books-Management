@@ -51,7 +51,9 @@ const createBook = async function (req, res) {
     const isTitleExists = await bookModel.find({
       title: { $regex: title, $options: "i" },
     });
+
     console.log(isTitleExists);
+
     const exactTitleMatch = [];
     for (let i = 0; i < isTitleExists.length; i++) {
       const str1 = isTitleExists[i].title;
@@ -114,11 +116,26 @@ const createBook = async function (req, res) {
       }
     }
 
-    if (!(validator.isValid(subcategory) && subcategory.length)) {
+
+    if (!validator.isValid(subcategory)) {
       return res
         .status(400)
-        .send({ status: false, message: "not a valid subcategory" });
+        .send({ status: false, message: "subcategory is not present in input field please provide" });
     }
+      console.log(subcategory,subcategory.length, typeof subcategory)
+    if (!subcategory.length ) {
+      return res
+        .status(400)
+        .send({ status: false, message: "subcategory is empty" });
+    }
+
+    req.body.subcategory = subcategory.filter(x => x.trim());
+    if (data.subcategory.length == 0) { return res.status(400).send({ status: false, message: 'Subcategory is required' }) }
+
+    
+  
+     
+
 
     // if (!validator.isValid(reviews)) {
     //   return res
@@ -138,6 +155,12 @@ const createBook = async function (req, res) {
         .send({ status: false, message: "releasedAt is not present" });
     }
     //to get date at release at
+    const isRightFormatReleasedAt = function (releasedAt) {
+      return /((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)
+  }
+
+  if (!isRightFormatReleasedAt(releasedAt)) { return res.status(400).send({ status: false, message: 'Please provide a valid released date in format YYYY/MM/DD ' }) }
+
     let m = moment(releasedAt, "YYYY-MM-DD");
     //m.isValid(); // false
     if (!m.isValid()) {
@@ -446,19 +469,16 @@ const deleteById = async function (req, res) {
         .send({ status: false, message: "bookid is not valid or not present" });
     }
 
-    let filter = {
-      isdeleted: false,
-
-      _id: bookId,
-    };
+    
 
     let deletedBook = await bookModel.findOneAndUpdate(
-      filter,
+      {_id:bookId, isDeleted:false},
       { isDeleted: true, deletedAt: new Date() },
       { new: true }
     );
 
-    if (!validator.isValid(deletedBook)) {
+    console.log(deletedBook)
+    if (!deletedBook) {
       return res.status(404).send({ status: false, message: "book not found" });
     }
 

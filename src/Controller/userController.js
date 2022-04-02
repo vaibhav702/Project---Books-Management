@@ -12,13 +12,14 @@ const registerUser = async function (req, res) {
         .status(400)
         .send({ status: false, message: "ERROR! : request body is empty" });
     } else {
-      const { title, name, phone, email, password, address, confirmPassword } =
-        requestBody;
+      const { title, name, phone, email, password, address, confirmPassword } = requestBody;
+
       if (!validator.isValid(name)) {
         return res
           .status(400)
           .send({ status: false, message: "enter valid name" });
       }
+
       let isName = /^[A-Za-z ]*$/;
       if (!isName.test(name)) {
         return res
@@ -31,6 +32,7 @@ const registerUser = async function (req, res) {
           .status(400)
           .send({ status: false, message: "enter valid title" });
       }
+
       if (!["Mr", "Mrs", "Miss"].includes(title)) {
         return res
           .status(400)
@@ -85,24 +87,24 @@ const registerUser = async function (req, res) {
       //       message: "email is invalid please enter valid email",
       //     });
       // }
-      
 
 
-//       const emailvalidator = require("email-validator");
-// if(validator.validate(req.body.email)){
-//       // Your call to model here
-// }else{
-//    res.status(400).send('Invalid Email');
-// }
-        if(!validatEmail.isEmail(email)){
-          return res.status(400).send({status:false, msg:"BAD REQUEST email is invalid "})
 
-        }
-     
+      //       const emailvalidator = require("email-validator");
+      // if(validator.validate(req.body.email)){
+      //       // Your call to model here
+      // }else{
+      //    res.status(400).send('Invalid Email');
+      // }
+      if (!validatEmail.isEmail(email)) {
+        return res.status(400).send({ status: false, msg: "BAD REQUEST email is invalid " })
+
+      }
+
       if (!/^[^A-Z]*$/.test(email)) {
-         
-          return res.status(400).send({status:false, msg:"BAD REQUEST please provied valid email which do not contain any Capital letter "})
-        
+
+        return res.status(400).send({ status: false, msg: "BAD REQUEST please provied valid email which do not contain any Capital letter " })
+
       }
 
 
@@ -123,24 +125,24 @@ const registerUser = async function (req, res) {
           .status(400)
           .send({ status: false, message: "enter valid password" });
       }
-      
-        //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
-        //^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$
-        //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
+
+      //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
+      //^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$
+      //^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,}$
       if (! /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/.test(password)) {
         return res.status(400).send({
 
-            status: false,
-            msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
-          
-          })
-    }
+          status: false,
+          msg: "Please enter Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
 
-          //     At least one upper case English letter, (?=.*?[A-Z])
-          // At least one lower case English letter, (?=.*?[a-z])
-          // At least one digit, (?=.*?[0-9])
-          // At least one special character, (?=.?[#?!@$%^&-])
-          // Minimum eight in length .{8,} (with the anchors)
+        })
+      }
+
+      //     At least one upper case English letter, (?=.*?[A-Z])
+      // At least one lower case English letter, (?=.*?[a-z])
+      // At least one digit, (?=.*?[0-9])
+      // At least one special character, (?=.?[#?!@$%^&-])
+      // Minimum eight in length .{8,} (with the anchors)
 
 
 
@@ -160,15 +162,16 @@ const registerUser = async function (req, res) {
             message: "password does not match with confirm password",
           });
       }
+
       delete req.body["confirmPassword"];
 
-      
-      if (address==undefined || !validator.isValidRequestBody(address)) {
+
+      if (address == undefined || !validator.isValidRequestBody(address)) {
         return res
           .status(400)
           .send({ status: false, message: "enter valid address" });
       }
-      
+
 
       const { street, pincode, city } = address;
 
@@ -212,6 +215,8 @@ const registerUser = async function (req, res) {
 };
 
 
+
+
 const loginUser = async function (req, res) {
   try {
     let email = req.body.email;
@@ -221,20 +226,18 @@ const loginUser = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "enter valid email" });
-    }  
+    }
 
-
-
-    if(!validatEmail.isEmail(email)){
-      return res.status(400).send({status:false, msg:"BAD REQUEST email is invalid "})
+    if (!validatEmail.isEmail(email)) {
+      return res.status(400).send({ status: false, msg: "BAD REQUEST email is invalid " })
 
     }
- 
-  if (!/^[^A-Z]*$/.test(email)) {
-     
-      return res.status(400).send({status:false, msg:"BAD REQUEST please provied valid email which do not contain any Capital letter "})
-    
-  }
+
+    if (!/^[^A-Z]*$/.test(email)) {
+
+      return res.status(400).send({ status: false, msg: "BAD REQUEST please provied valid email which do not contain any Capital letter " })
+
+    }
 
 
 
@@ -255,20 +258,22 @@ const loginUser = async function (req, res) {
         status: false,
         msg: "email or the password is not corerct",
       });
-
+     
     let token = jwt.sign(
       {
         userId: user._id,
         email: user.email,
+        iat: new Date().getTime() / 1000
       },
       "PROJECT3BOOKMANAGEMENTPROJECTDONYBYGROUP7",
       {
-        expiresIn: "99m",
+        expiresIn: "1m",
       }
     );
 
     res.setHeader("x-auth-token", token);
     return res.status(200).send({ status: true, data: token });
+
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message });
   }
