@@ -168,7 +168,7 @@ const createBook = async function (req, res) {
       data: savedData,
     });
   } catch (error) {
-    return res.status(500).send({ status: true, Error: error.message });
+    return res.status(500).send({ status: false, Error: error.message });
   }
 };
 
